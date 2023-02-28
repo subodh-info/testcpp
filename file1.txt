@@ -1,0 +1,2 @@
+welcome to C++ file handling.
+this is simple example of scrum master. 

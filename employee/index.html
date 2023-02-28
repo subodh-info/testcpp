@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to Employee record by WASM</h1>
+    <!-- <script>
+        // var wasmMemory = new WebAssembly.Memory({'initial': 256, 'maximum':65536});
+
+        // const importObj = {
+        //     module: {},
+        //     env:{
+        //         stackSave: n => 2, stackResotre: n => 3, absortStackOverflow: () => {
+        //             throw new Error("overflow");
+        //         },
+        //         table: new WebAssembly.Table({
+        //             initial: 0, maximum: 65536, element: 'anyfunc'
+        //         }), __table_base: 0,
+        //         memory: wasmMemory, __memory_basse: 256
+        //     }
+        // };
+
+        // fetch("employee.wasm").then(bytes => bytes.arrayBuffer()).then(module => WebAssembly.instantiate(module, importObj))
+        // .then(finalcode => {
+        //     console.log(finalcode);
+        //     console.log(WebAssembly.instance.expoorts);
+        // });
+
+        let wasmExports;
+
+let wasmMemory = new WebAssembly.Memory({initial: 256, maximum: 256});
+let wasmTable = new WebAssembly.Table({
+	'initial': 1,
+	'maximum': 1,
+	'element': 'anyfunc'
+});
+
+let asmLibraryArg = {
+	"__handle_stack_overflow": () => {},
+	"emscripten_resize_heap": () => {},
+	"__lock": () => {},
+	"__unlock": () => {},
+	"memory": wasmMemory,
+	"table": wasmTable
+}
+
+let info = {
+	'env': asmLibraryArg,
+	'wasi_snapshot_preview1': asmLibraryArg
+};
+
+async function loadWasm(){
+	let response = await fetch('employee.wasm');
+	let bytes = await response.arrayBuffer();
+	let wasmObj = await WebAssembly.instantiate(bytes, info);
+	wasmExports = wasmObj.instance.exports;
+}
+
+loadWasm();
+        
+    </script> -->
+    <script>
+        // const importObj = {
+        //    env: {
+        //     __memory_base: 0,
+        //     __table_base: 0,
+        //     memory: new WebAssembly.Memory({initial: 1})
+        //    },
+        // };
+
+        // fetch("./employee.wasm")
+        // .then(bytes => bytes.arrayBuffer())
+        // .then(mod => WebAssembly.compile(mod))
+        // .then(module => WebAssembly.instantiate(module, importObj))
+        // .then(finalcode => {
+        //     console.log(finalcode);
+        // });
+
+        // console.log("Welcome to WebAssembly");
+        // WebAssembly.instantiateStreaming(
+        //     fetch("./employee.wasm"),{}
+        // ).then(result => {
+        //     let res = result.instance.exports;
+        //     console.log(res);
+        // })
+
+        WebAssembly.instantiateStreaming(fetch("employee.wasm"),{})
+        .then(wasm => {
+            console.log("wasm ready");
+            window.wasm = wasm;
+            console.log(WebAssembly.Module.exports(wasm.module));
+        });
+        
+    </script>
+</body>
+</html>
